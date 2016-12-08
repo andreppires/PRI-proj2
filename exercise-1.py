@@ -9,7 +9,7 @@ stop_words = get_stop_words('en')
 # fetch test data
 test = fetch_20newsgroups(subset='test')
 # tri-gramas and no stop-words
-vectorizer = TfidfVectorizer(use_idf=False, ngram_range=(1, 3
+vectorizer = TfidfVectorizer(use_idf=False, ngram_range=(1, 3)
 , stop_words=stop_words)
 # apply tf
 trainvec = vectorizer.fit_transform(test.data[:20])
