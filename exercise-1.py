@@ -3,61 +3,97 @@ from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import TfidfVectorizer
 import operator
 
-#part 1: criar os candidatos: tri-gramas e ignorar stop-words
-# get stop words
-stop_words = get_stop_words('en')
-# fetch test data
-test = fetch_20newsgroups(subset='test')
-# tri-gramas and no stop-words
-vectorizer = TfidfVectorizer(use_idf=False, ngram_range=(1, 3)
-, stop_words=stop_words)
-# apply tf
-trainvec = vectorizer.fit_transform(test.data[:20])
-feature_names = vectorizer.get_feature_names()
-#print feature_names
-keywords=[]
+# return feature names from file using tf-idf algorithm
+def get_feature_names(file_name):
+	print "Getting feature names..."
 
-#clean unicode
-for i in feature_names:
-    keywords.append(i.encode('utf-8'))
+	# get stop words
+	stop_words = get_stop_words("en")
 
-#create PR structure
-PR={}
-for x in keywords:
-    PR.setdefault(x, [])
-    PR[x].append(1)
+	# fetch test data
+	train = fetch_20newsgroups(subset="train")
 
+	# tri-gramas and no stop-words
+	vectorizer = TfidfVectorizer(use_idf=False, ngram_range=(1, 3)
+	, stop_words=stop_words)
 
-#found links
-x=[]
-for u in keywords:
-    x=u.split(" ")
-    for v in keywords:
-        if u == v:
-            continue
-        for y in x:
-            if y in v:
-                PR[u].append(v)
-                break
-        continue
+	# learn idf
+	trainvec = vectorizer.fit_transform(train.data)
 
+	# input document as array
+	input_document = []
 
-#part 2: fazer o ranking de acordo com a formula. 50 iteracoes max
-N=len(keywords)
-d=0.15
-interation=50
-for i in xrange(interation):
-    for key in PR:
-        PR[key].pop(0)
-        PRj=0
-        for yek in PR[key]:
-            PRj=PRj + PR[yek][0]
-        links=len(PR[key])
-        PR[key].insert(0, ((1-d)*(PRj/links)+d/N))
+	# read file
+	with open(file_name, "r") as f:
+		content = f.read()
+		input_document.append(content)
+		f.close()
 
-#part 3: escolher os 5 melhores
+	# apply tf
+	testvec = vectorizer.transform(input_document)
 
-orderedPR= sorted(PR.items(), key=operator.itemgetter(1)) #reverse ordered
-print "TOP-5 keywords:"
-for i in xrange(5):
-    print orderedPR[N-1-i][0]
+	# get feature names
+	feature_names = vectorizer.get_feature_names()
+
+	return feature_names[:10]
+
+# return page rank for each keyphrase
+def get_page_rank(keyphrashes):
+	print "Getting page ranks..."
+
+	keywords=[]
+
+	# clean unicode
+	for key in keyphrashes:
+		keywords.append(key.encode('utf-8'))
+
+	# create PR structure
+	PR={}
+	for x in keywords:
+		PR.setdefault(x, [])
+		PR[x].append(1)
+
+	# find links
+	x=[]
+	for u in keywords:
+		x=u.split(" ")
+		for v in keywords:
+		    if u == v:
+		        continue
+		    for y in x:
+		        if y in v:
+		            PR[u].append(v)
+		            break
+		    continue
+
+	# run page rank
+	N=len(keywords)
+	d=0.15
+	interation=1
+	for i in xrange(interation):
+		for key in PR:
+		    PR[key].pop(0)
+		    PRj=0
+		    for yek in PR[key]:
+		        PRj=PRj + PR[yek][0]
+		    links=len(PR[key])
+		    PR[key].insert(0, ((1-d)*(PRj/links)+d/N))
+
+	return PR
+
+# return top five element (highest page rank)
+def get_top_five(PR):
+	print "Getting top five..."
+
+	top_five = []
+	orderedPR = sorted(PR.items(), key=operator.itemgetter(1), reverse = True)
+	for i in xrange(5):
+		top_five.append(orderedPR[i][0])
+
+	return top_five
+
+fn = get_feature_names("test.txt")
+pr = get_page_rank(fn)
+tf = get_top_five(pr)
+for w in tf:
+	print w
