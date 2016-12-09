@@ -18,7 +18,7 @@ def append_strings(s1, s2):
 
 	return s1
 
-# return plain string with elements from NYT XML/RSS feed document
+# return plain string with titles and descriptions from NYT XML/RSS feed document
 # elements are split by '\n'
 def convert_xml_to_string(filename):
 	namespaces = {"dc" : "http://purl.org/dc/elements/1.1/",
@@ -33,20 +33,9 @@ def convert_xml_to_string(filename):
 			# title
 			title = item.find("title").text
 			doc = append_strings(doc, title)
-			# credits
-			credits = item.findall("media:credit", namespaces)
-			for credit in credits:
-				doc = append_strings(doc, credit.text)
 			# description
 			description = item.find("description").text
 			doc = append_strings(doc, description)
-			# creator
-			creator = item.find("dc:creator", namespaces).text
-			doc = append_strings(doc, creator)
-			# categories
-			categories = item.findall("category")
-			for category in categories:
-				doc = append_strings(doc, category.text)
 
 	return doc
 
