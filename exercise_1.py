@@ -47,7 +47,7 @@ def get_candidates(file_name, file_content, small_n_gram, high_n_gram):
 # return page rank for each keyphrase
 def get_page_rank(keyphrases):
 	print "Getting page ranks..."
-	
+
 	keywords = []
 
 	# clean unicode
@@ -59,7 +59,7 @@ def get_page_rank(keyphrases):
 	for x in keywords:
 		PR.setdefault(x, [])
 		PR[x].append(1)
-		
+
 	# find links
 	x = []
 	for u in keywords:
