@@ -18,7 +18,7 @@ def get_feature_names(file_name):
 	, stop_words=stop_words)
 
 	# learn idf
-	trainvec = vectorizer.fit_transform(train.data)
+	trainvec = vectorizer.fit_transform(train.data[:20])
 
 	# input document as array
 	input_document = []
@@ -35,16 +35,16 @@ def get_feature_names(file_name):
 	# get feature names
 	feature_names = vectorizer.get_feature_names()
 
-	return feature_names[:10]
+	return feature_names
 
 # return page rank for each keyphrase
-def get_page_rank(keyphrashes):
+def get_page_rank(keyphrases):
 	print "Getting page ranks..."
 
 	keywords=[]
 
 	# clean unicode
-	for key in keyphrashes:
+	for key in keyphrases:
 		keywords.append(key.encode('utf-8'))
 
 	# create PR structure
@@ -69,7 +69,7 @@ def get_page_rank(keyphrashes):
 	# run page rank
 	N=len(keywords)
 	d=0.15
-	interation=1
+	interation=50
 	for i in xrange(interation):
 		for key in PR:
 		    PR[key].pop(0)
