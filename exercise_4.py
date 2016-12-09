@@ -71,5 +71,5 @@ def export_to_html(xml_file_name, html_file_name):
 		f.write(_html.render(xhtml=True))
 
 if __name__ == "__main__":
-	export_to_html("exercise_4.html");
+	export_to_html("nyt_rss.xml", "exercise_4.html");
 
