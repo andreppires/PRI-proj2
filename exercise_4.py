@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 from dominate.tags import *
+from exercise_1 import get_top_five
 
 # return s1 appended with s2 with '\n' between them
 def append_strings(s1, s2):
@@ -44,27 +45,31 @@ def insert_candidates(element, candidates):
 	for candidate in candidates:
 		_ul.add(li(candidate))
 
-# export results to html file
-def export_html(file_name):
+# export results taken from previous exercises applied on xml_file_name to html_file_name
+def export_to_html(xml_file_name, html_file_name):
+	# content to work with
+	content = convert_xml_to_string(xml_file_name)
+
+	# create html object
 	_html = html()
 	_head, _body = _html.add(head(title("PRI Project - Exercise 4")), body())
 
 	# exercise 1 algorithm candidates
-	_body.add(h1("Candidates for algorithm used in exercise 1:"))
-	insert_candidates(_body, [1, 2, 3])
+	_body.add(h1("Top 5 candidates for algorithm used in exercise 1:"))
+	candidates = get_top_five(None, content)
+	insert_candidates(_body, candidates)
 
 	# exercise 2 algorithm candidates
-	_body.add(h1("Candidates for algorithm used in exercise 2:"))
+	_body.add(h1("Top 5 candidates for algorithm used in exercise 2:"))
 	insert_candidates(_body, [1, 2, 3, 4])
 
 	# exercise 3 algorithm candidates
-	_body.add(h1("Candidates for algorithm used in exercise 3:"))
+	_body.add(h1("Top 5 candidates for algorithm used in exercise 3:"))
 	insert_candidates(_body, [1, 2, 3, 4, 5])
 
-	with open(file_name, "w") as f:
+	with open(html_file_name, "w") as f:
 		f.write(_html.render(xhtml=True))
 
-export_html();
-#doc = convert_xml_to_string("nyt_rss.xml")
-#print doc
+if __name__ == "__main__":
+	export_to_html("exercise_4.html");
 

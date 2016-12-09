@@ -4,7 +4,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import operator
 
 # return feature names from file using tf-idf algorithm
-def get_feature_names(file_name):
+def get_feature_names(file_name, file_content):
 	print "Getting feature names..."
 
 	# get stop words
@@ -24,10 +24,13 @@ def get_feature_names(file_name):
 	input_document = []
 
 	# read file
-	with open(file_name, "r") as f:
-		content = f.read()
-		input_document.append(content)
-		f.close()
+	if (file_name != None):
+		with open(file_name, "r") as f:
+			content = f.read()
+			input_document.append(content)
+			f.close()
+	else:
+		input_document.append(file_content)
 
 	# apply tf
 	testvec = vectorizer.transform(input_document)
@@ -41,22 +44,22 @@ def get_feature_names(file_name):
 def get_page_rank(keyphrases):
 	print "Getting page ranks..."
 
-	keywords=[]
+	keywords = []
 
 	# clean unicode
 	for key in keyphrases:
 		keywords.append(key.encode('utf-8'))
 
 	# create PR structure
-	PR={}
+	PR = {}
 	for x in keywords:
 		PR.setdefault(x, [])
 		PR[x].append(1)
 
 	# find links
-	x=[]
+	x = []
 	for u in keywords:
-		x=u.split(" ")
+		x = u.split(" ")
 		for v in keywords:
 		    if u == v:
 		        continue
@@ -67,33 +70,35 @@ def get_page_rank(keyphrases):
 		    continue
 
 	# run page rank
-	N=len(keywords)
-	d=0.15
-	interation=50
+	N = len(keywords)
+	d = 0.15
+	interation = 50
 	for i in xrange(interation):
 		for key in PR:
 		    PR[key].pop(0)
-		    PRj=0
+		    PRj = 0
 		    for yek in PR[key]:
-		        PRj=PRj + PR[yek][0]
-		    links=len(PR[key])
+		        PRj = PRj + PR[yek][0]
+		    links = len(PR[key])
 		    PR[key].insert(0, ((1-d)*(PRj/links)+d/N))
 
 	return PR
 
-# return top five element (highest page rank)
-def get_top_five(PR):
-	print "Getting top five..."
+# get top 5 keyphrases from file_name or file_content using PageRank algorithm
+def get_top_five(file_name, file_content):
+	fn = get_feature_names(file_name, file_content)
+	pr = get_page_rank(fn)
 
+	print "Getting top five..."
 	top_five = []
-	orderedPR = sorted(PR.items(), key=operator.itemgetter(1), reverse = True)
+	orderedPR = sorted(pr.items(), key=operator.itemgetter(1), reverse = True)
 	for i in xrange(5):
 		top_five.append(orderedPR[i][0])
 
 	return top_five
 
-fn = get_feature_names("test.txt")
-pr = get_page_rank(fn)
-tf = get_top_five(pr)
-for w in tf:
-	print w
+if __name__ == "__main__":
+	tf = get_top_five("test.txt", None)
+	for keyphrase in tf:
+		print keyphrase
+
