@@ -8,7 +8,7 @@ def clean_content(content):
 	# get stop words
 	stop_words = get_stop_words("en")
 
-	# erase ponctuation
+	# erase punctuation
 	content = "".join(ch for ch in content if ch not in string.punctuation)
 
 	# erase stop words
