@@ -24,7 +24,7 @@ def get_feature_names(file_name, file_content):
 	input_document = []
 
 	# read file
-	if (file_name != None):
+	if (file_name is not None):
 		with open(file_name, "r") as f:
 			content = f.read()
 			input_document.append(content)

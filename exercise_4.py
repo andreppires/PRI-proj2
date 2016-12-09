@@ -4,13 +4,13 @@ from exercise_1 import get_top_five
 
 # return s1 appended with s2 with '\n' between them
 def append_strings(s1, s2):
-	if (s1 == None and s2 == None):
+	if (s1 is None and s2 is None):
 		return None
 
-	if (s1 == None):
+	if (s1 is None):
 		return s2
 
-	if (s2 == None):
+	if (s2 is None):
 		return s1
 
 	if (s1 != ""):
