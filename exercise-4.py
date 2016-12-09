@@ -21,9 +21,6 @@ def append_strings(s1, s2):
 # return plain string with titles and descriptions from NYT XML/RSS feed document
 # elements are split by '\n'
 def convert_xml_to_string(filename):
-	namespaces = {"dc" : "http://purl.org/dc/elements/1.1/",
-				"media" : "http://search.yahoo.com/mrss/"}
-
 	doc = "";		# empty document
 
 	root = ET.parse(filename)
