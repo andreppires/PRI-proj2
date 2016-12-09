@@ -18,8 +18,6 @@ def clean_content(content):
 
 # return candidates for file_name or file_content
 def get_candidates(file_name, file_content, small_n_gram, high_n_gram):
-	print "Getting candidates..."
-
 	# content to work with
 	new_content = ""
 
@@ -46,8 +44,6 @@ def get_candidates(file_name, file_content, small_n_gram, high_n_gram):
 
 # return page rank for each keyphrase
 def get_page_rank(keyphrases):
-	print "Getting page ranks..."
-
 	keywords = []
 
 	# clean unicode
@@ -93,7 +89,6 @@ def get_top_five(file_name, file_content):
 	candidates = get_candidates(file_name, file_content, 1, 3)
 	pr = get_page_rank(candidates)
 
-	print "Getting top five..."
 	top_five = []
 	orderedPR = sorted(pr.items(), key=operator.itemgetter(1), reverse = True)
 	for i in xrange(5):

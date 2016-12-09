@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 from dominate.tags import *
-from exercise_1 import get_top_five
+from exercise_1 import get_top_five as gtf_ex1
+from exercise_3 import get_top_five as gtf_ex3
 
 # return s1 appended with s2 with '\n' between them
 def append_strings(s1, s2):
@@ -56,8 +57,8 @@ def export_to_html(xml_file_name, html_file_name):
 
 	# exercise 1 algorithm candidates
 	_body.add(h1("Top 5 candidates for algorithm used in exercise 1:"))
-	candidates = get_top_five(None, content)
-	insert_candidates(_body, candidates)
+	candidates1 = gtf_ex1(None, content)
+	insert_candidates(_body, candidates1)
 
 	# exercise 2 algorithm candidates
 	_body.add(h1("Top 5 candidates for algorithm used in exercise 2:"))
@@ -65,7 +66,8 @@ def export_to_html(xml_file_name, html_file_name):
 
 	# exercise 3 algorithm candidates
 	_body.add(h1("Top 5 candidates for algorithm used in exercise 3:"))
-	insert_candidates(_body, [1, 2, 3, 4, 5])
+	candidates3 = gtf_ex3(None, content)
+	insert_candidates(_body, candidates3)
 
 	with open(html_file_name, "w") as f:
 		f.write(_html.render(xhtml=True))
