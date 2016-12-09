@@ -49,7 +49,6 @@ def get_feature_names(file_name, file_content):
 # return page rank for each keyphrase
 def get_page_rank(keyphrases):
 	print "Getting page ranks..."
-	print len(keyphrases)
 	keywords = []
 
 	# clean unicode
