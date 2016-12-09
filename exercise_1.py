@@ -1,7 +1,7 @@
 from stop_words import get_stop_words
-from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import TfidfVectorizer
 import operator
+import os
 
 # return feature names from file using tf-idf algorithm
 def get_feature_names(file_name, file_content):
@@ -10,15 +10,21 @@ def get_feature_names(file_name, file_content):
 	# get stop words
 	stop_words = get_stop_words("en")
 
-	# fetch test data
-	train = fetch_20newsgroups(subset="train")
+	# fetch train data/collenction from disk
+	# using wiki20 collection from https://github.com/zelandiya/keyword-extraction-datasets
+	train = []
+	for file in os.listdir("wiki20/documents"):
+		if file.endswith(".txt"):
+		    with open("wiki20/documents/" + file, 'r') as myfile:
+		        train.append(myfile.read().replace('\n', ''))
 
 	# tri-gramas and no stop-words
 	vectorizer = TfidfVectorizer(use_idf=False, ngram_range=(1, 3)
 	, stop_words=stop_words)
 
 	# learn idf
-	trainvec = vectorizer.fit_transform(train.data[:20])
+	# carefull here. more document -> more precision -> more time to compute them all
+	trainvec = vectorizer.fit_transform(train[:2])
 
 	# input document as array
 	input_document = []
@@ -43,7 +49,7 @@ def get_feature_names(file_name, file_content):
 # return page rank for each keyphrase
 def get_page_rank(keyphrases):
 	print "Getting page ranks..."
-
+	print len(keyphrases)
 	keywords = []
 
 	# clean unicode
